@@ -12,7 +12,7 @@ import mimetypes
 app = 'peepfinder'
 
 # optionally change these settings
-ctype = None
+ctype = 'people'
 data = 'data'
 settings = 'conf'
 resources = { 

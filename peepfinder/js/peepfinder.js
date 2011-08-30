@@ -9,7 +9,7 @@ var sexFacet = C9.api.facet.termFacet("sex").field("sex").size(10).allTerms(true
 
 var cloud9 = C9.api.search.Search({
                     indices:['demos'], 
-                    types:['peepfinder']
+                    types:['people']
             })
             .addFacet(sexFacet)
             .addFacet(stateFacet);
