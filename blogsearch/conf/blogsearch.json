@@ -1,0 +1,13 @@
+{
+  "blogpost": {
+    "properties": {
+      "author": {
+        "type" : "multi_field",
+        "fields" : {
+          "author" : {"type" : "string", "index" : "analyzed"},
+          "author_facet" : {"type" : "string", "index" : "not_analyzed"}
+        }
+      }
+    }
+  }
+}
