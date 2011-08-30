@@ -63,7 +63,7 @@ def configure_app():
     if os.path.exists(mappings_path):
         print 'Found mappings: %s' % mappings_path
         mappings = open(mappings_path, 'rb').read()
-        http('PUT', '/demos/%s/_mapping' % ctype, mappings)
+        http('PUT', '/demos/%s/_mapping' % ctype if ctype is not None else app, mappings)
 
 def install_data():
     """ Indexes any data needed for the Cloud9 App """
