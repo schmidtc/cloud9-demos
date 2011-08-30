@@ -1,0 +1,106 @@
+<html class="c9">
+
+<head>
+	<link rel="stylesheet" href="/cloud9/peepfinder/css/main.css" />
+	<script type="text/javascript" src="/cloud9/js/jquery-1.6.2.min.js"></script>
+	<script type="text/javascript" src="/cloud9/js/jquery.tmpl.min.js"></script>
+	<script type="text/javascript" src="/cloud9/js/json2.js"></script>
+	<script type="text/javascript" src="/cloud9/js/c9/namespace.js"></script>
+	<script type="text/javascript" src="/cloud9/js/c9/api/query.js"></script>
+	<script type="text/javascript" src="/cloud9/js/c9/api/filter.js"></script>
+	<script type="text/javascript" src="/cloud9/js/c9/api/facet.js"></script>
+	<script type="text/javascript" src="/cloud9/js/c9/api/search.js"></script>
+	<script type="text/javascript" src="/cloud9/peepfinder/js/peepfinder.js"></script>
+	<title>peepfinder - Cloud9 App</title>
+</head>
+<body>
+
+<script id="infoTmpl" type="text/x-jQuery-tmpl">
+	<h2 class="top">Results for: <span>${query}</span> (${hits})</h2>
+</script>
+		
+<script id="resultsTmpl" type="text/x-jQuery-tmpl">
+	<div class="searchResult">
+		<h3 class="title"><a href="#">${_source.first} ${_source.last}</a></h3>
+		<p class="description">${_source.city}, ${_source.state} ${_source.zip}</p>
+		<p class="info"><span>${_source.phone}</span></p>
+	</div>
+</script>
+
+<script id="noResultsTmpl" type="text/x-jQuery-tmpl">
+	<div class="searchResult">
+		<h3 class="title">No People Found</h3>
+	</div>
+</script>
+
+<script id="pagerTmpl" type="text/x-jQuery-tmpl">
+	<ul>
+		{{if pager.current() > 1}}
+			<li class="arrows"><a href="#" onclick="pager.go(1);">First</a></li>
+			<li class="arrows"><a href="#" onclick="pager.go(${pager.previous()});">Previous</a></li>
+		{{/if}}
+		{{each(i, page) pager.pages(10, 21)}}
+			{{if page === pager.current()}}
+				<li class="selected">${page}</li>
+			{{else}}
+				<li><a href="#" onclick="pager.go(${page});">${page}</a></li>
+			{{/if}}
+		{{/each}}
+		{{if pager.current() < pager.total()}}
+			<li class="arrows"><a href="#" onclick="pager.go(${pager.next()});">Next</a></li>
+			<li class="arrows"><a href="#" onclick="pager.go(${pager.total()});">Last</a></li>
+		{{/if}}
+	</ul>
+</script>
+
+<script id="facetsTmpl" type="text/x-jQuery-tmpl">
+	<h3>Narrow Results By:</h3>
+	{{each(i, facetName) facetNames}}
+		<h4>${facetName}</h4>
+		<ul class="filterContent">
+			{{each(j, fterm) facets[facetName].terms}}
+				{{if fm.has(facetName, fterm.term)}}
+					<li class="selected">${fterm.term.toUpperCase()} <span><a href="#" onclick="removeFacet('${facetName}','${fterm.term}');">[remove]</a></span></li>
+				{{else}}
+					{{if fterm.count === 0}}
+						<li>${fterm.term.toUpperCase()}</li>
+					{{else}}
+						<li><a href="#" onclick="addFacet('${facetName}','${fterm.term}');">${fterm.term.toUpperCase()}</a><span>(${fterm.count})</span></li>
+					{{/if}}
+				{{/if}}
+			{{/each}}
+		</ul>
+		{{if i + 1 !== facetNames.length}}
+			<div class="divider"></div>
+		{{/if}}
+	{{/each}}
+</script>
+	
+<div id="main">
+	
+	<div id="header">
+		<div id="searcharea">
+			<input id="searchbox" />
+		</div>
+	</div>
+	
+	<div id="infobox">
+		<div id="maininfo"></div>
+		<div class="pager"></div>
+		<div class="clear"></div>
+	</div>
+
+	<div id="resultContainer">
+		<div id="facets"></div>
+		<div id="results">
+			<div id="all"></div>
+			<div class="pager"></div>
+		</div>
+		<div class="clear"></div>
+	</div>
+	
+	<div id="footer"></div>
+</div>
+
+</body>
+</html>

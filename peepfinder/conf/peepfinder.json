@@ -1,0 +1,42 @@
+{
+	"peepfinder" : {
+		"properties" : {
+			"first" : {
+				"type" : "multi_field",
+				"fields" : {
+					"first" : {
+						"type" : "string"
+					},
+					"firstgrammed" : {
+						"type" : "string",
+						"analyzer" : "ngrammer"
+					}
+				}
+			},
+			"last" : {
+				"type" : "multi_field",
+				"fields" : {
+					"last" : {
+						"type" : "string"
+					},
+					"lastgrammed" : {
+						"type" : "string",
+						"analyzer" : "ngrammer"
+					}
+				}
+			},
+			"username" : {
+				"type" : "multi_field",
+				"fields" : {
+					"username" : {
+						"type" : "string"
+					},
+					"usernamegrammed" : {
+						"type" : "string",
+						"analyzer" : "ngrammer"
+					}
+				}
+			}
+		}
+	}
+}

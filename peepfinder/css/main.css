@@ -1,0 +1,251 @@
+body {
+    margin: 0px 10px;
+    background-color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#main {
+    margin: 0 auto;
+    padding: 15px 0px 0px 0px;
+    width: 955px;
+    font-size: 0.83em;
+}
+
+#main h2 {
+    font-size: 14px;
+    font-weight: normal;
+    color: #666;
+    padding: 0 0 12px 0;
+    margin: 0;
+}
+
+#main h2 span {
+    font-weight: bold;
+    color: #000066;
+}
+
+#header {
+    width: 955px;
+    height: 63px;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #d6d6d6;
+    border-radius: 8px;
+    background: -webkit-linear-gradient(top, #fff, #f8f8f8);
+    background: -moz-linear-gradient(top, #fff, #f8f8f8);
+    background: -ms-linear-gradient(top, #fff, #f8f8f8);
+}
+
+#searcharea {
+    width: 60%;
+    padding: 11px 0 0 13px;
+    margin: 0;
+}
+
+#searchbox {
+    width: 422px;
+    height: 33px;
+    border: 1px solid #d6d6d6;
+    padding: 3px;
+    margin: 4px 0 0 5px;
+    color: #000066;
+    font-size: 17px;
+    border-radius: 5px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#infobox {
+    margin: 10px 4px 18px 2px;
+    border-bottom: 1px solid #d6d6d6;
+}
+
+#maininfo {
+    float: left;
+}
+
+#infobox div.pager {
+    float: right;
+    border-top: none;
+    padding: 0 0 12px;
+}
+
+#infobox div.pager ul {
+    padding: 0;
+}
+
+#resultContainer {
+    width: 950px;
+    margin: 0 0 0 2px;
+    padding: 0;
+    float: left;
+}
+
+#facets {
+    width: 188px;
+    height: auto !important;
+    min-height: 800px;
+    float: left;
+    border: 1px solid #d6d6d6;
+    background-color: #f8f8f8;
+}
+
+#facets h3 {
+    font-size: 15px;
+    color: #000066;
+    font-weight: normal;
+    margin: 10px 16px 15px 15px;
+    padding: 0 0 10px 0;
+    border-bottom: 1px dotted #d6d6d6;
+}
+
+#facets h4 {
+    font-size: 13px;
+    color: #000066;
+    font-weight: bold;
+    padding-left: 15px;
+    margin: 0 0 6px 15px;
+}
+
+#facets ul {
+    list-style-type: none;
+    padding-left: 25px;
+    margin: 0;
+    font-size: 12px;
+}
+
+#facets ul li {
+    padding: 0px 0px 4px 6px;
+    margin: 0px 13px 0px 0px;
+    color: #999; 
+}
+
+#facets ul li a, 
+#facets ul li a:link {
+    color: #666;
+    text-decoration: underline;
+    outline: none;  
+}
+
+#facets ul li a:hover {
+    color: #ff0000;
+    text-decoration: underline; 
+}
+
+#facets ul li.selected {
+    color: #3399cc;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+#facets ul li span {
+    padding-left: 6px;
+}
+
+#facets ul li span a, 
+#facets ul li span a:link {
+    color: #3399cc;
+    text-decoration: none;
+    font-size: 10px;
+    font-weight: normal;
+}
+
+#facets ul li span a:hover {
+    color: #ff0000;
+}
+
+#results {
+    width: 742px;
+    margin: 0 0 0 18px;
+    float: left;
+}
+
+.searchResult {
+    padding: 0;
+    margin: 0 0 22px 0;
+}
+
+.title {
+    font-size: 15px;
+    font-weight: normal;
+    color: #000066;
+    padding: 0 0 1px 0;
+    margin: 0;
+}
+
+.title a,
+.title a:link {
+    color: #000066;
+    text-decoration: underline;
+    outline: none;
+}
+
+.title a:hover {
+    color: #ff0000;
+    text-decoration: underline;
+}
+
+.description {
+    color: #333;
+    padding: 0;
+    margin: 0;
+    line-height: 18px;
+}
+
+.info {
+    color: #388222;
+    padding: 0;
+    margin: 0 0 3px 0;
+}
+
+.info span {
+    color: #666;
+}
+
+.pager {
+    border-top: 1px solid #d6d6d6;
+}
+
+.pager ul {
+    list-style-type: none;
+    padding: 13px 0 0 0;
+    margin: 0;
+}
+
+.pager ul li {
+    display: inline;
+    padding-right: 8px;
+    color: #666;
+}
+
+.pager ul li a,
+.pager ul li a:link {
+    color: #666;
+    text-decoration: underline;
+    outline: none;
+}
+
+.pager ul li a:hover {
+    color: #ff0000;
+    text-decoration: underline;
+}
+
+.pager ul li.arrows a,
+.pager ul li.arrows a:link {
+    text-decoration: none;
+}
+
+.pager ul li.selected {
+    color: #000066;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.divider {
+    padding: 1px;
+    border-top: 1px dotted #d6d6d6;
+    margin: 17px 16px 17px 16px;    
+}
+
+.clear {
+  clear: both;
+}
