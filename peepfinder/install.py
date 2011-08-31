@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 
 import os
+import sys
 import json
 import time
 import base64
+import getopt
 import os.path
 import httplib
 import mimetypes
@@ -22,13 +24,29 @@ resources = {
     'html': {'binary': False}
 }
 
+# installer settings, do not change
+c9host = 'localhost'
+c9port = '8080'
+c9path = '/cloud9'
+
 app_settings = {u'mappings': {u'images': {u'properties': {u'code': {u'index': u'no', u'type': u'binary', u'store': u'no'}, u'mime': {u'index': u'no', u'type': u'string', u'store': u'no'}}, u'_source': {u'enabled': True, u'compress': True}}, u'html': {u'properties': {u'code': {u'index': u'no', u'type': u'string', u'store': u'no'}, u'mime': {u'index': u'no', u'type': u'string', u'store': u'no'}}, u'_source': {u'enabled': True, u'compress': True}}, u'css': {u'properties': {u'code': {u'index': u'no', u'type': u'string', u'store': u'no'}, u'mime': {u'index': u'no', u'type': u'string', u'store': u'no'}}, u'_source': {u'enabled': True, u'compress': True}}, u'js': {u'properties': {u'code': {u'index': u'no', u'type': u'string', u'store': u'no'}, u'mime': {u'index': u'no', u'type': u'string', u'store': u'no'}}, u'_source': {u'enabled': True, u'compress': True}}}, u'settings': {u'index': {u'number_of_replicas': 1, u'number_of_shards': 1}}}
+
+usage = \
+        \
+"""
+Usage: install [options]
+
+Options:
+    -h HOST         Set the hostname, default: localhost
+    -p PORT         Set the port, default: 8080
+    -u PATH         Set the path to Cloud9, default: /cloud9
+"""
 
 def http(method, path, body):
     """ Executes a HTTP request with the given method, path, and body """
-    print '%s %s' % (method, path)
-    connection =  httplib.HTTPConnection('127.0.0.1:9200')
-    connection.request(method, path, body)
+    print '%s %s' % (method, '%s:%s%s/api%s' % (c9host, c9port, c9path, path))
+    connection =  httplib.HTTPConnection('%s:%s' % (c9host, c9port))
+    connection.request(method, '%s/api%s' % (c9path, path), body)
     return connection.getresponse()
 
 def install_app():
@@ -76,6 +94,21 @@ def install_data():
             http('PUT', '/_bulk', ddata)
 
 if __name__ == '__main__':
-    install_app()
-    configure_app()
-    install_data()
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "h:p:u:")
+    except:
+        print usage
+        sys.exit(1)
+    else:
+        for option, arg in opts:
+            if option == '-h':
+                c9host = arg
+            elif option == '-p':
+                c9port = arg
+            elif option == '-u':
+                c9path = arg
+
+    
+        install_app()
+        configure_app()
+        install_data()
