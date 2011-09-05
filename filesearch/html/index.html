@@ -1,0 +1,129 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="/cloud9/demo/css/main.css">
+    <script type="text/javascript" src="/cloud9/js/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="/cloud9/js/jquery.tmpl.min.js"></script>
+    <script type="text/javascript" src="/cloud9/js/c9/cloud9.api-min.js"></script>
+    <script type="text/javascript" src="/cloud9/demo/js/dnd.js"></script>
+    
+    <title>filesearch - Cloud9 App</title>
+    
+    <script id="searchResults" type="text/x-jQuery-tmpl">
+      <div> 
+        <span class="title">
+          <a onClick="getDocument('${_index}','${_type}','${_id}',onGetDocCompleteDownload)" href="#">${fields.title}</a>
+        </span>&nbsp;&nbsp;
+        (<a onClick="getDocument('${_index}','${_type}','${_id}',onGetDocCompleteEdit)" href="#">edit</a>)<br>
+         <span class="teaser">
+           {{if typeof(highlight) !== "undefined"}}
+             {{html highlight.content}}
+           {{else}}
+             ${fields.content.substring(0,250)}
+           {{/if}}
+         </span><br>
+        <span class="tags">tags: ${fields.tags}</span>
+        <br><br>
+      </div>
+    </script>
+            
+    <script id="docEdit" type="text/x-jQuery-tmpl">
+      <div id="edit"> 
+        Title: <input id="title" class="in" value="${_source.title}" />  
+        Tags: <input id="tags" class="in" value="${_source.tags}" />
+        <input id="content" type="hidden" value="${_source.content}" />
+        <button onClick="update('${_index}', '${_type}', '${_id}')">Submit</button>
+        <button onClick="$('#edit').hide(200)">Cancel</button>
+        <br><br>
+      </div>
+    </script>
+  </head>
+  
+  <body>
+    <h3>File Search Demo</h3>
+    <div id="main">
+      <div id="header">
+        <div id="searcharea">
+          <input id="searchbox" value="*" /><button class="search-button" onClick="dosearch()">Search</button>
+        </div>
+      </div>
+        
+      <div id="infobox">
+        <div id="maininfo"></div>
+        <div class="pager"></div>
+        <div id="edit"></div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="resultContainer">
+        <div id="dropbox">
+          <span id="droplabel">Drop file here</span>
+        </div>
+        <div id="results"></div>
+        <div class="clear"></div>
+      </div>
+    </div>
+    
+    <script type="text/javascript">
+      var onSearchComplete = function(results) {
+        $("#results").empty();
+        if (results.hits.total > 0) {
+          $("#searchResults").tmpl(results.hits.hits).appendTo("#results");
+        }
+      }
+        
+      var onPutDocumentComplete = function(data){
+        $('#edit').hide(200);
+        setTimeout("dosearch()",1000);
+      }
+      
+      var onGetDocCompleteEdit = function(doc) {
+        $("#edit").replaceWith($("#docEdit").tmpl(doc));
+        $("#edit").show(200);
+      }
+          
+      var onGetDocCompleteDownload = function(doc) {
+        var content = encodeURIComponent(doc._source.content);
+        var dataUri = "data:application/octet-stream;base64," + content;
+        window.open(dataUri, "_self");
+      }
+        
+      var query = C9.api.query.queryString("*")
+          .fields(["title","content","tags"])
+          .useDisMax(true);
+      
+      var search = C9.api.search.Search({
+        indices:["demos"], 
+        types:["files"]
+      });
+      
+      var dosearch = function() {
+        query.query($("#searchbox").val());
+        search.setQuery(query)
+          .fields(["title","content","tags"])
+          .highlight(["content"])
+          .get(onSearchComplete); 
+      }
+      
+      var getDocument = function(idx, type, id, fnCallBack) {
+        C9.api.index.Document({
+          collection: idx, type: type, id: id
+        }).get(fnCallBack);
+      }               
+          
+      var update = function(idx, type, id) {
+        C9.api.index.Document({
+          collection: idx, type: type, id: id,
+          source: {
+            title: $("#title").val(),
+            tags: $("#tags").val().split(','),
+            content: $("#content").val() 
+          }
+        }).put(onPutDocumentComplete); 
+      }
+      
+      dosearch();
+      
+    </script>
+    
+  </body>
+</html>
