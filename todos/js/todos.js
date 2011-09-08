@@ -124,8 +124,7 @@
         clone: true,
         handle: ".todo-content",
         onComplete: function(ele) {
-            sortableTodos.serialize(false,
-            function(element, index) {
+            sortableTodos.serialize(false, function(element, index) {
                 todo = Todos.get(element.getProperty("id").replace("todo-", ""));
                 todo.save({
                     "order": index
@@ -182,7 +181,8 @@
             if (e.code != 13) return;
             Todos.create({
                 content: this.input.getProperty("value"),
-                done: false
+                done: false,
+                order: Todos.length
             });
             this.input.setProperty("value", "");
         },
