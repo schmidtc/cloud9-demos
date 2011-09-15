@@ -5,13 +5,7 @@
     <script type="text/javascript" src="/cloud9/js/jquery.tmpl.min.js"></script>
     <script type="text/javascript" src="/cloud9/js/json2.js"></script>
     <script type="text/javascript" src="/cloud9/js/protovis.min.js"></script>
-    <script type="text/javascript" src="/cloud9/js/c9/namespace.js"></script>
-    <script type="text/javascript" src="/cloud9/js/c9/api/query.js"></script>
-    <script type="text/javascript" src="/cloud9/js/c9/api/filter.js"></script>
-    <script type="text/javascript" src="/cloud9/js/c9/api/search.js"></script>
-    <script type="text/javascript" src="/cloud9/js/c9/api/facet.js"></script>
-    <script type="text/javascript" src="/cloud9/js/c9/api/visual/donut.js"></script>
-    <script type="text/javascript" src="/cloud9/js/c9/api/visual/timeline.js"></script>
+    <script type="text/javascript" src="/cloud9/js/c9/c9api.min.js"></script>
     <title>blogsearch - Cloud9 App</title>
   </head>
   
@@ -76,7 +70,7 @@
       }  
       
       // create a filter manager
-      var fm = C9.api.filter.manager();
+      var fm = C9.api.filter.filterManager();
       
       // create query object
       var query = C9.api.query.queryString("*").fields(["title","teaser","author"]).useDisMax(true);

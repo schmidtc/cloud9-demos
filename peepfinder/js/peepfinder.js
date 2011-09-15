@@ -2,7 +2,7 @@ var qry = C9.api.query.queryString('*')
             .fields(['username^10', 'first^5', 'last^5', 'firstgrammed', 'lastgrammed', 'usernamegrammed', 'city', 'state', 'zip'])
             .useDisMax(true);
 
-var fm = C9.api.filter.manager();
+var fm = C9.api.filter.filterManager();
 
 var stateFacet = C9.api.facet.termFacet("state").field("state").size(10).allTerms(true);
 var sexFacet = C9.api.facet.termFacet("sex").field("sex").size(10).allTerms(true);

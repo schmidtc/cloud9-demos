@@ -97,7 +97,7 @@ _.extend(C9Store.prototype, {
             collection: this.index,
             type: this.type,
             id: model.id
-        }).delete(function(data) {
+        }).del(function(data) {
             if (data.ok) {
                 cb(model);
             } else {
