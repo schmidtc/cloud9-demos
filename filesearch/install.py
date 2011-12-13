@@ -26,8 +26,8 @@ resources = {
 
 # installer settings, do not change
 c9host = 'localhost'
-c9port = '8080'
-c9path = '/cloud9'
+c9port = '2600'
+c9path = ''
 
 app_settings = {u'mappings': {u'images': {u'properties': {u'code': {u'index': u'no', u'type': u'binary', u'store': u'no'}, u'mime': {u'index': u'no', u'type': u'string', u'store': u'no'}}, u'_source': {u'enabled': True, u'compress': True}}, u'html': {u'properties': {u'code': {u'index': u'no', u'type': u'string', u'store': u'no'}, u'mime': {u'index': u'no', u'type': u'string', u'store': u'no'}}, u'_source': {u'enabled': True, u'compress': True}}, u'css': {u'properties': {u'code': {u'index': u'no', u'type': u'string', u'store': u'no'}, u'mime': {u'index': u'no', u'type': u'string', u'store': u'no'}}, u'_source': {u'enabled': True, u'compress': True}}, u'js': {u'properties': {u'code': {u'index': u'no', u'type': u'string', u'store': u'no'}, u'mime': {u'index': u'no', u'type': u'string', u'store': u'no'}}, u'_source': {u'enabled': True, u'compress': True}}}, u'settings': {u'index': {u'number_of_replicas': 1, u'number_of_shards': 1}}}
 
@@ -38,13 +38,13 @@ Usage: install [options]
 
 Options:
     -h HOST         Set the hostname, default: localhost
-    -p PORT         Set the port, default: 8080
-    -u PATH         Set the path to Cloud9, default: /cloud9
+    -p PORT         Set the port, default: 2600
+    -u PATH         Set the path to Cloud9, default: /
 """
 
 def http(method, path, body):
     """ Executes a HTTP request with the given method, path, and body """
-    print '%s %s' % (method, '%s:%s%s/api%s' % (c9host, c9port, c9path, path))
+    print '%s %s' % (method, '%s:%s%s%s' % (c9host, c9port, c9path, path))
     connection =  httplib.HTTPConnection('%s:%s' % (c9host, c9port))
     connection.request(method, '%s/api%s' % (c9path, path), body)
     return connection.getresponse()
