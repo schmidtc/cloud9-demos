@@ -57,6 +57,6 @@ function handleFiles(files) {
 }
 
 function handleReaderStart(evt) {
-  $("#droplabel").html("<img src='/cloud9/images/spinner.gif'/>");
+  $("#droplabel").html("<img src='/images/spinner.gif'/>");
 }
 
