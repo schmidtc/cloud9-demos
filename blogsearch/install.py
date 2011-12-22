@@ -46,7 +46,7 @@ def http(method, path, body):
     """ Executes a HTTP request with the given method, path, and body """
     print '%s %s' % (method, '%s:%s%s%s' % (c9host, c9port, c9path, path))
     connection =  httplib.HTTPConnection('%s:%s' % (c9host, c9port))
-    connection.request(method, '%s/api%s' % (c9path, path), body)
+    connection.request(method, '%s/v1%s' % (c9path, path), body)
     return connection.getresponse()
 
 def install_app():
