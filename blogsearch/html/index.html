@@ -103,7 +103,7 @@
              
         if (op === "add") {
           if (type === "date") {
-            var timestamp = new Date(term);
+            var timestamp = new Date(parseInt(term));
             ft = timestamp.getFullYear() + 1;
           }
           $("#filterCrumb").tmpl({id:id, type:type, term:term, formattedTerm:ft}).appendTo("#active-filters");  
