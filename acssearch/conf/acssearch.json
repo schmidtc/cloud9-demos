@@ -1,0 +1,20 @@
+{
+  "acsTable": {
+    "properties": {
+      "universe": {
+        "type" : "multi_field",
+        "fields" : {
+          "universe" : {"type" : "string", "index" : "analyzed"},
+          "universe_facet" : {"type" : "string", "index" : "not_analyzed"}
+        }
+      },
+      "subject": {
+        "type" : "multi_field",
+        "fields" : {
+          "subject" : {"type" : "string", "index" : "analyzed"},
+          "subject_facet" : {"type" : "string", "index" : "not_analyzed"}
+        }
+      }
+    }
+  }
+}

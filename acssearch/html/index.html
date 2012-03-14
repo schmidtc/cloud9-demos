@@ -1,0 +1,156 @@
+<html class="c9">
+  <head>
+    <link rel="stylesheet" href="/acssearch/css/main.css" />
+    <script type="text/javascript" src="/js/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.tmpl.min.js"></script>
+    <script type="text/javascript" src="/js/json2.js"></script>
+    <script type="text/javascript" src="/js/protovis.min.js"></script>
+    <script type="text/javascript" src="/js/c9/c9api.min.js"></script>
+    <title>acsTableSearch - Cloud9 App</title>
+  </head>
+  
+  <body onload="doSearch();">
+    <script id="searchResults" type="text/x-jQuery-tmpl">
+      <div>
+        <span class="title">${_source.title}</span><br>
+        <span class="universe">Universe: ${_source.universe}</span><br>
+        <span class="subject">Subject: ${_source.subject}</span><br>
+        <span class="tid">Table ID: ${_source.tid}</span><br>
+      </div>
+    </script>
+    
+    <script id="subjectFacet" type="text/x-jQuery-tmpl">
+      <div>
+        <a href="#" onClick="fm.add(C9.api.filter.termFilter('subject_facet', '${term}'),filterSearch)">${term}</span><span class="facetCount">${count}</a><br>
+      </div>
+    </script>
+
+    <script id="universeFacet" type="text/x-jQuery-tmpl">
+      <div>
+        <a href="#" onClick="fm.add(C9.api.filter.termFilter('universe_facet', '${term}'),filterSearch)">${term}</span><span class="facetCount">${count}</a><br>
+      </div>
+    </script>
+    
+    <script id="filterCrumb" type="text/x-jQuery-tmpl">
+      <a href="#" id="${id}" onClick="fm.remove('${type}','${term}',filterSearch)">[ ${formattedTerm} ]</a>
+    </script>
+    
+    <center>
+      <div>
+        <span class="teaser">Enter Your Query: <input type="text" id="user-query-input" /></span>
+        <button onClick="doSearch()" id="submit-query-button">Submit</button><br /><br />
+        <span class="active-filters">Active Filters:</span><span id="active-filters"></span>
+      </div>
+    </center><br />
+      
+    <div id="result-block">
+      <span class="pagetitle">Cloud9 Search Results</span><br /><br />
+      <div id="resultContainer"></div>
+    </div>
+    <div id="facet-column">
+      <div><br>
+        <span class="facet-header">Subjects</span><br /><br />
+        <div id="subjectFacetContainer"></div><br /><br />
+        <span class="facet-header">Distribution by Subject</span><br /><br />
+        <div id="subjectChart"></div>
+      </div>
+      <div><br>
+        <span class="facet-header">Universe</span><br /><br />
+        <div id="universeFacetContainer"></div><br /><br />
+        <span class="facet-header">Distribution by Universe</span><br /><br />
+        <div id="universeChart"></div>
+      </div>
+    </div>
+    
+    <script type="text/javascript">
+      $('#facet-column').hide();
+      var DATA;
+      // handles the display of search results
+      resultCallBack = function(results) {
+        DATA = results;
+        $("#resultContainer").empty();
+        $("#subjectFacetContainer").empty();
+        $("#universeFacetContainer").empty();
+        if (results.hits.total > 0) {
+          $("#searchResults").tmpl(results.hits.hits).appendTo("#resultContainer");
+          $("#subjectFacet").tmpl(results.facets.subject.terms).appendTo("#subjectFacetContainer");
+          $("#universeFacet").tmpl(results.facets.universe.terms).appendTo("#universeFacetContainer");
+          C9.api.visual.Donut('subject_facet', 'subjectChart').data(results.facets.subject.terms).draw(handleChartFilter);
+          C9.api.visual.Donut('universe_facet', 'universeChart').data(results.facets.universe.terms).draw(handleChartFilter);
+          //C9.api.visual.Timeline('date', 'dateChart').data(results.facets.pubdate.entries).draw(handleChartFilter);
+          $('#facet-column').show();
+        } else {
+          $('<span class="title">Sorry, no results found.</span>').appendTo("#resultContainer");
+          $('#facet-column').hide();
+          //$('#dateChart').hide();
+        }
+      }  
+      
+      // create a filter manager
+      var fm = C9.api.filter.filterManager();
+      
+      // create query object
+      var query = C9.api.query.queryString("*").fields(["title","universe","subject","tid"]).useDisMax(true);
+      
+      // create a subject (term) facet
+      var subjectFacet = C9.api.facet.termFacet("subject").field("subject_facet").size(10);
+      
+      // create a universe (term) facet
+      var universeFacet = C9.api.facet.termFacet("universe").field("universe_facet").size(10);
+      
+      // create search instance
+      var cloud9 = C9.api.search.Search({indices:["demos"], types:["acsTable"]}).addFacet(subjectFacet).addFacet(universeFacet).size(20);
+      
+      // handle user input
+      doSearch = function() {
+        var val = $("#user-query-input").val()
+        if (val == ''){
+            val = '*';
+        }
+        query.query(val);
+        //cloud9.setQuery(query).get(resultCallBack); 
+        q = fm.apply(query);
+        cloud9.setQuery(q).get(resultCallBack);
+      };
+      
+      // handles filtering of current search
+      filterSearch = function(type, term, op) {
+        cloud9.setQuery(fm.apply(query)).get(resultCallBack);
+
+        var ft = term;
+        var id = type+term;
+        
+        try {
+         id = type+term.replace(' ','-');
+        } catch (e) { id = type+term; }
+             
+        if (op === "add") {
+          if (type === "date") {
+            var timestamp = new Date(parseInt(term));
+            ft = timestamp.getFullYear() + 1;
+          }
+          $("#filterCrumb").tmpl({id:id, type:type, term:term, formattedTerm:ft}).appendTo("#active-filters");  
+        } else {
+          $('#'+id).replaceWith('');
+        }
+      }
+      
+      handleChartFilter = function(type, term) {
+        if (type === "date") {
+          // we have a date and need a numeric filter
+          var start = new Date(term);
+          var end = new Date(start.getTime());
+          end.setFullYear(start.getFullYear() + 1);
+          fm.add(C9.api.filter.numericRangeFilter('date').from(start.getTime()).to(end.getTime()), filterSearch); 
+        } else {
+          // we have a simple term filter
+          fm.add(C9.api.filter.termFilter(type, term), filterSearch);
+        }
+      }
+      
+      // handles enter key on searches
+      $("#user-query-input").keypress(function(e) {if (e.which == 13) { doSearch(); }});
+      
+    </script>
+  </body>
+</html>
